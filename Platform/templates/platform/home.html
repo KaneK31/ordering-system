@@ -1,0 +1,16 @@
+{% extends "platform/base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <h2 class="mb-4">Welcome, {{ request.user.username }}!</h2>
+
+    <div class="d-grid gap-3 col-6 mx-auto">
+        <a href="{% url 'platform:product_list' %}" class="btn btn-primary btn-lg">View All Products</a>
+        <a href="#" class="btn btn-outline-secondary btn-lg">My Account</a>
+        <a href="{% url 'platform:view_cart' %}" class="btn btn-outline-success btn-lg">My Cart</a>
+        <a href="{% url 'platform:logout' %}" class="btn btn-outline-danger btn-lg">Logout</a>
+    </div>
+</div>
+{% endblock %}

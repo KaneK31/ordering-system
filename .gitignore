@@ -1,0 +1,41 @@
+# ─── Python ──────────────────────────────
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+*.pyo
+*.pyd
+*.pdb
+*.log
+*.sqlite3
+*~  # temporary swap/backup files like `file.py~`
+
+# ─── Virtual Environments ────────────────
+venv/
+.env/
+.envs/
+.venv/
+venv.bak/
+*.env
+
+# ─── IDEs & Editors ──────────────────────
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ─── OS / Misc ───────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Django ──────────────────────────────
+staticfiles/
+media/
+db.sqlite3
+*.pot
+*.pyc
+*.mo
+
+# ─── Ngrok ───────────────────────────────
+.ngrok*

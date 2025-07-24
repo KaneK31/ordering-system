@@ -1,0 +1,50 @@
+{% extends "platform/base.html" %}
+
+{% block title %}All Products{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">All Products</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.product_name }}"
+                     style="height: 200px; object-fit: contain; background: #f8f9fa;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <span class="text-muted">No Image</span>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.product_name }}</h5>
+                    <p class="card-text">{{ product.product_desc|truncatechars:100 }}</p>
+                    <p class="card-text">Stock Level: {{ product.product_stock }}kg</p>
+                    <p class="card-text fw-bold">
+                        {% if product.product_price %}
+                        £{{ product.product_price }}
+                        {% else %}
+                        <span class="text-muted">No price</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="card-footer">
+                    <form method="post" action="{% url 'platform:add_to_cart' product.id %}" class="d-flex align-items-center justify-content-between">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;">
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No products available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

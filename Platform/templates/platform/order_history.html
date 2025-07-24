@@ -1,0 +1,47 @@
+{% extends "platform/base.html" %}
+{% block title %}Order History{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Order History</h2>
+
+    {% if orders %}
+    <div class="accordion" id="orderAccordion">
+        {% for order in orders %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ order.id }}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ order.id }}" aria-expanded="false"
+                        aria-controls="collapse{{ order.id }}">
+                    Order #{{ order.id }} &middot; {{ order.created_at|date:"D, d M Y - H:i" }}
+                </button>
+            </h2>
+            <div id="collapse{{ order.id }}" class="accordion-collapse collapse"
+                 aria-labelledby="heading{{ order.id }}" data-bs-parent="#orderAccordion">
+                <div class="accordion-body">
+                    {% for item in order.items_with_subtotals %}
+                    <p>
+                        <strong>{{ item.product.product_name }}</strong><br>
+                        Quantity: {{ item.quantity }}<br>
+                        Price: £{{ item.price }}<br>
+                        Subtotal: £{{ item.subtotal|floatformat:2 }}
+                    </p>
+                    <hr>
+                    {% empty %}
+                    <p class="text-muted">No items in this order.</p>
+                    {% endfor %}
+                </div>
+                <div class="text-end mt-2">
+                    <a href="{% url 'platform:order_confirmation' order.id %}" class="btn btn-sm btn-outline-primary">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">You have no past orders.</div>
+    {% endif %}
+</div>
+{% endblock %}
