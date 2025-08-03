@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -129,3 +130,13 @@ BASE_URL = os.getenv("BASE_URL")
 
 PAYPAL_RECEIVER_EMAIL = os.getenv("PAYPAL_RECEIVER_EMAIL")
 PAYPAL_TEST = True
+
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '51f83c5f0b41.ngrok-free.app',  # your ngrok URL
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+]

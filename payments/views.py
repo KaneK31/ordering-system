@@ -30,7 +30,6 @@ def checkout_summary(request):
         'cancel_return': f"{settings.BASE_URL}{reverse('platform:view_cart')}",
     }
     print("INVOICE ID:", request.session.get("invoice_id"))
-    print("DEBUG PAYPAL_TEST:", settings.PAYPAL_TEST)
     form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, 'platform/checkout_summary.html', {
