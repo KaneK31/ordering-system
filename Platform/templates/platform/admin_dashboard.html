@@ -1,0 +1,42 @@
+{% extends "platform/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">Orders Dashboard</h2>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Order ID</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Order Date</th>
+                <th scope="col">Total Price (£)</th>
+                <th scope="col">Payment Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user.username|default:order.user.email }}</td>
+                <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                <td>{{ order.total_price }}</td>
+                <td>
+                    {% if order.is_paid %}
+                    <span class="badge bg-success">Paid</span>
+                    {% else %}
+                    <span class="badge bg-danger">Pending</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted">No orders found.</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
