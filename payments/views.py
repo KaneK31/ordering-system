@@ -30,6 +30,7 @@ def checkout_summary(request):
         'cancel_return': f"{settings.BASE_URL}{reverse('platform:view_cart')}",
     }
     print("INVOICE ID:", request.session.get("invoice_id"))
+    print("DEBUG PAYPAL_TEST:", settings.PAYPAL_TEST)
     form = PayPalPaymentsForm(initial=paypal_dict)
 
     return render(request, 'platform/checkout_summary.html', {
@@ -41,11 +42,16 @@ def checkout_summary(request):
 
 
 def payment_successful(request, invoice_id):
-    order = get_object_or_404(Order, invoice_id=invoice_id, user=request.user)
+    order = get_object_or_404(Order, invoice_id=invoice_id)
 
     if not order.is_paid:
         messages.warning(request, "Payment not yet verified by PayPal.")
         return redirect("platform:view_cart")
+
+    if request.user.is_authenticated and request.user == order.user:
+        messages.success(request, "Payment successful! Order confirmed.")
+    else:
+        messages.info(request, "Payment successful. Please log in to see your order history.")
 
     request.session["cart"] = {}
     return redirect('platform:order_confirmation', order_id=order.id)
