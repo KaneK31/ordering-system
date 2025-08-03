@@ -169,3 +169,9 @@ def get_cart_details(cart):
             'subtotal': subtotal
         })
     return items, total
+
+
+def admin_dashboard(request):
+    paid_orders = Order.objects.filter(is_paid=True).order_by("-created_at")
+
+    return render(request, 'platform/admin_dashboard.html', {"orders": paid_orders})
