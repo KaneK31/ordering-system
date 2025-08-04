@@ -1,10 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "platform/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="alert alert-info text-center shadow-sm">
+        <h4 class="fw-bold">Processing Payment</h4>
+        <p>Your payment has been received, but we’re waiting for PayPal to confirm it.</p>
+        <p class="mb-0">Please refresh this page in a few seconds.</p>
+    </div>
+</div>
+
+<!-- Optional auto-refresh every 5 seconds -->
+<script>
+    setTimeout(() => {
+        window.location.reload();
+    }, 10000);
+</script>
+{% endblock %}
