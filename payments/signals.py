@@ -1,18 +1,25 @@
-from paypal.standard.models import ST_PP_COMPLETED
-from paypal.standard.ipn.signals import valid_ipn_received
 from django.dispatch import receiver
+from paypal.standard.ipn.signals import valid_ipn_received
 from Platform.models import Order
-from decimal import Decimal
-
 
 @receiver(valid_ipn_received)
-def paypal_ipn_handler(sender, **kwargs):
+def payment_notification(sender, **kwargs):
     ipn = sender
-    if ipn.payment_status == ST_PP_COMPLETED:
+    if ipn.payment_status == "Completed":
         try:
             order = Order.objects.get(invoice_id=ipn.invoice)
-            if ipn.mc_gross == float(order.get_total_cost()) and ipn.mc_currency == "GBP":
+
+            if not order.is_paid:
+                # Mark as paid
                 order.is_paid = True
                 order.save()
+
+                # Deduct stock
+                for item in order.items.all():
+                    item.product.product_stock -= item.quantity
+                    item.product.save()
+
+                print(f"[IPN] Order {order.id} marked as paid. Stock updated.")
+
         except Order.DoesNotExist:
-            pass
+            print(f"[IPN] No matching order found for invoice {ipn.invoice}")
