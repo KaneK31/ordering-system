@@ -28,7 +28,7 @@
             <td>{{ item.product.product_name }}</td>
             <td>{{ item.quantity }}</td>
             <td>£{{ item.price }}</td>
-            <td>£{{ item.subtotal|floatformat:2 }}</td>
+            <td>Subtotal: £{{ item.subtotal|floatformat:2 }}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -41,7 +41,6 @@
     <div class="text-center mt-4">
         <a href="{% url 'platform:product_list' %}" class="btn btn-outline-primary">Continue Shopping</a>
     </div>
-
 
 
 </div>
