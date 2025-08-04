@@ -134,7 +134,7 @@ PAYPAL_TEST = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '51f83c5f0b41.ngrok-free.app',  # your ngrok URL
+    '.ngrok-free.app',  # your ngrok URL
 ]
 
 CSRF_TRUSTED_ORIGINS = [
