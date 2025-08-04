@@ -132,9 +132,6 @@ def order_confirmation(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     items = order.items.all()
 
-    for item in items:
-        item.subtotal = item.quantity * item.price
-
     total = sum(item.subtotal for item in items)
 
     return render(request, 'platform/order_confirmation.html', {
@@ -144,15 +141,16 @@ def order_confirmation(request, order_id):
     })
 
 
+
 def order_history(request):
     orders = Order.objects.filter(user=request.user, is_paid=True).order_by('-created_at')
 
+    # Attach items directly instead of recalculating subtotals
     for order in orders:
-        for item in order.items.all():
-            item.subtotal = item.quantity * item.price
         order.items_with_subtotals = order.items.all()
 
     return render(request, 'platform/order_history.html', {"orders": orders})
+
 
 
 # ✅ Reusable helper
@@ -167,7 +165,8 @@ def get_cart_details(cart):
         items.append({
             'product': product,
             'quantity': quantity_decimal,
-            'subtotal': subtotal
+            'subtotal': subtotal,
+            'total_price': subtotal  # ✅ Add this lin
         })
     return items, total
 
@@ -176,3 +175,8 @@ def admin_dashboard(request):
     paid_orders = Order.objects.filter(is_paid=True).order_by("-created_at")
 
     return render(request, 'platform/admin_dashboard.html', {"orders": paid_orders})
+
+
+def order_detail_admin(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, "platform/order_detail_admin.html", {"order": order})

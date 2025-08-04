@@ -11,6 +11,7 @@ def payment_notification(sender, **kwargs):
 
             if not order.is_paid:
                 # Mark as paid
+                order.total_price = order.get_total_cost()
                 order.is_paid = True
                 order.save()
 
