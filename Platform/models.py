@@ -22,6 +22,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     invoice_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     is_paid = models.BooleanField(default=False)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # new field
 
     def get_total_cost(self):
         return sum(item.quantity * item.price for item in self.items.all())
@@ -35,3 +36,7 @@ class OrderItem(models.Model):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
     quantity = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'))
     price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    @property
+    def subtotal(self):
+        return self.quantity * self.price
