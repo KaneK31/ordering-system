@@ -36,7 +36,7 @@
                 <div class="card-footer">
                     <form method="post" action="{% url 'platform:add_to_cart' product.id %}" class="d-flex align-items-center justify-content-between">
                         {% csrf_token %}
-                        <input type="number" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;">
+                        <input type="number" name="quantity" value="0.1" min="0.1" class="form-control me-2" style="width: 80px;">
                         <button type="submit" class="btn btn-sm btn-outline-primary">Add to Cart</button>
                     </form>
                 </div>
