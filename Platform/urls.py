@@ -16,5 +16,6 @@ urlpatterns = [
     path('order_confirmation/<int:order_id>/', views.order_confirmation, name='order_confirmation'),
     path('order_history/', views.order_history, name='order_history'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path("admin_dashboard/order/<int:order_id>/", views.order_detail_admin, name="order_detail_admin"),
     path('home/', views.home, name='home'),
 ]
