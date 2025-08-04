@@ -1,6 +1,5 @@
 import uuid
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
@@ -10,6 +9,8 @@ from decimal import Decimal, InvalidOperation
 
 
 def index(request):
+    logout(request)
+
     return render(request, 'platform/index.html')
 
 
@@ -128,7 +129,7 @@ def checkout(request):
 
 
 def order_confirmation(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order = get_object_or_404(Order, id=order_id)
     items = order.items.all()
 
     for item in items:
