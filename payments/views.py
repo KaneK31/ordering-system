@@ -42,13 +42,17 @@ def payment_successful(request, invoice_id):
     order = get_object_or_404(Order, invoice_id=invoice_id)
 
     if not order.is_paid:
-        messages.warning(request, "Payment not yet verified by PayPal.")
-        return redirect("platform:view_cart")
+        messages.info(
+            request,
+            "Your payment was received. We’re waiting for PayPal to confirm — this usually takes a few seconds."
+        )
+        return render(request, 'payments/payment_pending.html', {'order': order})
 
+    # When IPN has marked it paid
+    request.session["cart"] = {}
     if request.user.is_authenticated and request.user == order.user:
         messages.success(request, "Payment successful! Order confirmed.")
     else:
         messages.info(request, "Payment successful. Please log in to see your order history.")
 
-    request.session["cart"] = {}
     return redirect('platform:order_confirmation', order_id=order.id)
