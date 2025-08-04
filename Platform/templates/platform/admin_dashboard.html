@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ order.id }}</td>
                 <td>{{ order.user.username|default:order.user.email }}</td>
-                <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                <td>{{ order.order_date|date:"M d, Y H:i" }}</td>
                 <td>{{ order.total_price }}</td>
                 <td>
                     {% if order.is_paid %}
@@ -29,14 +29,23 @@
                     <span class="badge bg-danger">Pending</span>
                     {% endif %}
                 </td>
+                <td>
+                    <a href="{% url 'platform:order_detail_admin' order.id %}"
+                       class="btn btn-sm btn-outline-primary">
+                        View Details
+                    </a>
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="text-center text-muted">No orders found.</td>
+                <td colspan="6" class="text-center text-muted">No orders found.</td>
             </tr>
             {% endfor %}
             </tbody>
+
         </table>
     </div>
 </div>
+
+
 {% endblock %}
