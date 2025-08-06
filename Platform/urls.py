@@ -17,5 +17,6 @@ urlpatterns = [
     path('order_history/', views.order_history, name='order_history'),
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path("admin_dashboard/order/<int:order_id>/", views.order_detail_admin, name="order_detail_admin"),
+    path("my_account/", views.my_account, name="my_account"),
     path('home/', views.home, name='home'),
 ]

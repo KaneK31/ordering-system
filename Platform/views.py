@@ -60,6 +60,14 @@ def login_user(request):
     return render(request, 'platform/login.html')
 
 
+@login_required
+def my_account(request):
+    return render(request, "platform/my_account.html", {
+        "user": request.user,
+        "orders": request.user.order_set.filter(is_paid=True).order_by('-created_at')
+    })
+
+
 def add_to_cart(request, product_id):
     cart = request.session.get("cart", {})
 
@@ -190,6 +198,7 @@ def admin_dashboard(request):
         "query": query,
         "sort_by": sort_by
     })
+
 
 @staff_member_required
 def order_detail_admin(request, order_id):

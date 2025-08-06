@@ -1,0 +1,75 @@
+{% extends "platform/base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-primary">My Account</h2>
+
+    <!-- Profile Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Profile Information</h5>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+
+            <!-- Optional profile picture -->
+            {% if user.profile.picture %}
+                <div class="mb-3">
+                    <img src="{{ user.profile.picture.url }}" alt="Profile Picture"
+                         class="img-thumbnail" style="max-height: 150px;">
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    <!-- Order History -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Order History</h5>
+
+            {% if orders %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Total (£)</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                            <td>{{ order.total_price }}</td>
+                            <td>
+                                {% if order.is_paid %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'platform:order_confirmation' order.id %}"
+                                   class="btn btn-sm btn-outline-primary">
+                                   View
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p class="text-muted">You have no paid orders yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -8,7 +8,7 @@
 
     <div class="d-grid gap-3 col-6 mx-auto">
         <a href="{% url 'platform:product_list' %}" class="btn btn-primary btn-lg">View All Products</a>
-        <a href="#" class="btn btn-outline-secondary btn-lg">My Account</a>
+        <a href="{% url 'platform:my_account' %}" class="btn btn-outline-secondary btn-lg">My Account</a>
         <a href="{% url 'platform:view_cart' %}" class="btn btn-outline-success btn-lg">My Cart</a>
         <a href="{% url 'platform:logout' %}" class="btn btn-outline-danger btn-lg">Logout</a>
     </div>
