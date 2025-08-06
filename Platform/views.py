@@ -3,14 +3,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, logout, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from .models import Product, Order, OrderItem
+from django.db.models import Q
 from decimal import Decimal, InvalidOperation
 
 
 def index(request):
-    logout(request)
-
     return render(request, 'platform/index.html')
 
 
@@ -36,7 +36,7 @@ def signup(request):
         password = request.POST.get('password')
         email = request.POST.get('email')
 
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=username, email=email).exists():
             messages.error(request, "User already exists.")
             return redirect("platform:signup")
         else:
@@ -71,11 +71,13 @@ def add_to_cart(request, product_id):
         messages.warning(request, "Invalid quantity entered.")
         return redirect('platform:product_list')
 
+    product = get_object_or_404(Product, id=product_id)
+
     product_id_str = str(product_id)
     cart[product_id_str] = cart.get(product_id_str, 0) + float(quantity)
 
     request.session['cart'] = cart
-    messages.success(request, f"Added {quantity} to cart.")
+    messages.success(request, f"Added {quantity}kg of {product.product_name} to cart.")
     return redirect('platform:product_list')
 
 
@@ -141,7 +143,6 @@ def order_confirmation(request, order_id):
     })
 
 
-
 def order_history(request):
     orders = Order.objects.filter(user=request.user, is_paid=True).order_by('-created_at')
 
@@ -150,7 +151,6 @@ def order_history(request):
         order.items_with_subtotals = order.items.all()
 
     return render(request, 'platform/order_history.html', {"orders": orders})
-
 
 
 # ✅ Reusable helper
@@ -172,11 +172,26 @@ def get_cart_details(cart):
 
 
 def admin_dashboard(request):
-    paid_orders = Order.objects.filter(is_paid=True).order_by("-created_at")
+    paid_orders = Order.objects.filter(is_paid=True).exclude(total_price=0)
 
-    return render(request, 'platform/admin_dashboard.html', {"orders": paid_orders})
+    query = request.GET.get('q', '')
+    sort_by = request.GET.get('sort_by', '-created_at')
 
+    if query:
+        paid_orders = paid_orders.filter(
+            Q(user__username__icontains=query) |
+            Q(invoice_id__icontains=query)
+        )
 
+    paid_orders = paid_orders.order_by(sort_by)
+
+    return render(request, 'platform/admin_dashboard.html', {
+        "orders": paid_orders,
+        "query": query,
+        "sort_by": sort_by
+    })
+
+@staff_member_required
 def order_detail_admin(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, "platform/order_detail_admin.html", {"order": order})
