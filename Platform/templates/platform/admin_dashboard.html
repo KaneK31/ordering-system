@@ -4,15 +4,36 @@
 <div class="container my-5">
     <h2 class="mb-4 text-primary">Orders Dashboard</h2>
 
+    <!-- Search + Sort Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-6">
+            <input type="text" name="q" class="form-control" placeholder="Search by username or invoice ID"
+                   value="{{ query }}">
+        </div>
+        <div class="col-md-4">
+            <select name="sort_by" class="form-select">
+                <option value="-created_at" {% if sort_by == "-created_at" %}selected{% endif %}>Newest First</option>
+                <option value="created_at" {% if sort_by == "created_at" %}selected{% endif %}>Oldest First</option>
+                <option value="-total_price" {% if sort_by == "-total_price" %}selected{% endif %}>Highest Price</option>
+                <option value="total_price" {% if sort_by == "total_price" %}selected{% endif %}>Lowest Price</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Apply</button>
+        </div>
+    </form>
+
+    <!-- Table -->
     <div class="table-responsive shadow-sm">
         <table class="table table-striped table-hover align-middle">
             <thead class="table-dark">
             <tr>
-                <th scope="col">Order ID</th>
-                <th scope="col">Customer</th>
-                <th scope="col">Order Date</th>
-                <th scope="col">Total Price (£)</th>
-                <th scope="col">Payment Status</th>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Order Date</th>
+                <th>Total Price (£)</th>
+                <th>Payment Status</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -42,10 +63,7 @@
             </tr>
             {% endfor %}
             </tbody>
-
         </table>
     </div>
 </div>
-
-
 {% endblock %}
