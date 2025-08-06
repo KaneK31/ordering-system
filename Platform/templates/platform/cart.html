@@ -34,7 +34,7 @@
         <tr>
             <td>{{ item.product.product_name }}</td>
             <td>£{{ item.product.product_price }}</td>
-            <td>{{ item.quantity }}kg</td>
+            <td>{{ item.quantity|floatformat:2  }}kg</td>
             <td>£{{ item.total_price|floatformat:2 }}</td>
             <td>
                 <a href="{% url 'platform:remove_item' item.product.id %}"
