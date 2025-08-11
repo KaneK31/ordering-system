@@ -22,7 +22,13 @@ class Order(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     invoice_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
     is_paid = models.BooleanField(default=False)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # new field
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    full_name = models.CharField(max_length=120, blank=True)
+    address1 = models.CharField(max_length=200, blank=True)
+    address2 = models.CharField(max_length=200, blank=True)
+    city = models.CharField(max_length=100, blank=True)
+    postcode = models.CharField(max_length=20, blank=True)
+    phone = models.CharField(max_length=30, blank=True)
 
     def get_total_cost(self):
         return sum(item.quantity * item.price for item in self.items.all())

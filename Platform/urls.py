@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from django.contrib.auth import views as auth_views
 
 app_name = "platform"
 
@@ -20,10 +19,5 @@ urlpatterns = [
     path("admin_dashboard/order/<int:order_id>/", views.order_detail_admin, name="order_detail_admin"),
     path("my_account/", views.my_account, name="my_account"),
     path('home/', views.home, name='home'),
-    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='platform/password_change.html'),
-         name='password_change'),
-    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(
-        template_name='platform/password_change_done.html'
-    ), name='password_change_done'),
 
 ]
