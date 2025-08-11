@@ -1,7 +1,8 @@
 import uuid
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, logout, login
+from django.contrib.auth import authenticate, logout, login, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
@@ -60,11 +61,25 @@ def login_user(request):
     return render(request, 'platform/login.html')
 
 
-@login_required
 def my_account(request):
+    orders = request.user.order_set.filter(is_paid=True).order_by('-created_at')
+
+    if request.method == "POST" and request.POST.get("form_name") == "password_change":
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # keep user logged in
+            messages.success(request, "Password updated successfully.")
+            return redirect("platform:my_account")
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = PasswordChangeForm(user=request.user)
+
     return render(request, "platform/my_account.html", {
         "user": request.user,
-        "orders": request.user.order_set.filter(is_paid=True).order_by('-created_at')
+        "orders": orders,
+        "password_form": form,
     })
 
 

@@ -13,63 +13,80 @@
             <p><strong>Username:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
 
-            <!-- Optional profile picture -->
-            {% if user.profile.picture %}
-                <div class="mb-3">
-                    <img src="{{ user.profile.picture.url }}" alt="Profile Picture"
-                         class="img-thumbnail" style="max-height: 150px;">
-                </div>
-            {% endif %}
-
-
         </div>
     </div>
+
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h5 class="card-title">Change Password</h5>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_name" value="password_change">
+                {{ password_form.as_p }}
+                <button type="submit" class="btn btn-outline-secondary">Update Password</button>
+                <a href="{% url 'platform:logout' %}" class="btn btn-danger ms-2">Logout</a>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Order History -->
     <div class="card shadow-sm">
         <div class="card-body">
             <h5 class="card-title">Order History</h5>
+            <h10 class="card-title">Here are your 5 most recent orders</h10>
 
             {% if orders %}
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead class="table-light">
-                        <tr>
-                            <th>Order ID</th>
-                            <th>Date</th>
-                            <th>Total (£)</th>
-                            <th>Status</th>
-                            <th>Details</th>
-                        </tr>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total (£)</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for order in orders %}
-                        <tr>
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
-                            <td>{{ order.total_price }}</td>
-                            <td>
-                                {% if order.is_paid %}
-                                    <span class="badge bg-success">Paid</span>
-                                {% else %}
-                                    <span class="badge bg-warning">Pending</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a href="{% url 'platform:order_confirmation' order.id %}"
-                                   class="btn btn-sm btn-outline-primary">
-                                   View
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                        <td>{{ order.total_price }}</td>
+                        <td>
+                            {% if order.is_paid %}
+                            <span class="badge bg-success">Paid</span>
+                            {% else %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'platform:order_confirmation' order.id %}"
+                               class="btn btn-sm btn-outline-primary">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% else %}
-                <p class="text-muted">You have no paid orders yet.</p>
+            <p class="text-muted">You have no paid orders yet.</p>
             {% endif %}
         </div>
     </div>
+    <a href="{% url 'platform:logout' %}" class="btn btn-danger btn-sm">Logout</a>
 </div>
 {% endblock %}
